@@ -7,10 +7,19 @@
 #define SHDW_LINE_LEN 256
 #define WORD_LEN 80
 
+typedef struct SHADOWDATA
+{
+	char * id;
+	char * salt;
+	char * hash;
+}ShadowData;
+
+
 int main(){
 
 	FILE *shadow;
 	FILE *dict;
+	ShadowData fullShadow[52];
 
 	shadow = fopen("shadow", "r");
 	if(shadow == NULL){
@@ -29,13 +38,22 @@ int main(){
 	while(fgets(shdw_line, SHDW_LINE_LEN, shadow)!=NULL){
 		char *token = strtok(shdw_line, ":");
 		printf("ID: %s\n", token);
+		fullShadow[num_accounts].id = (char *) malloc( strlen(token));
+		strcpy(fullShadow[num_accounts].id, token);
+		
 		char *shdw_hash = strtok(NULL, ":");
 		if(strcmp(shdw_hash, "*")!=0 && strcmp(shdw_hash, "!")!=0){
 			token = strtok(shdw_hash, "$");
 			token = strtok(NULL, "$");
 			printf("  salt: %s\n", token);
+			fullShadow[num_accounts].salt = (char *) malloc( strlen(token));
+			strcpy(fullShadow[num_accounts].salt, token);
+			
 			token = strtok(NULL, "$");
 			printf("  hash: %s\n", token);
+			fullShadow[num_accounts].hash = (char *) malloc( strlen(token));
+			strcpy(fullShadow[num_accounts].hash, token);
+			
 			num_accounts++;
 			//////////////////////
 			// Part A: 
@@ -45,7 +63,10 @@ int main(){
 		}
 	}
 
-	char word[WORD_LEN];
+	printf("ID\tsalt\thash\n");
+	for(int i = 0; i < num_accounts; i ++)
+		printf("%s\t%s\t%s\n",fullShadow[i].id, fullShadow[i].salt, fullShadow[i].hash);
+	/*char word[WORD_LEN];
 	while(fgets(word, WORD_LEN, dict)!=NULL){
 		for(int i=0; i<num_accounts; i++){
 			//////////////////////
@@ -62,5 +83,12 @@ int main(){
 			//  print the password and userid
 			//////////////////////
 		}
+	}*/
+
+	for(int i = 0; i < num_accounts; i++)
+	{
+		free(fullShadow[i].id);
+		free(fullShadow[i].salt);
+		free(fullShadow[i].hash);
 	}
 }
