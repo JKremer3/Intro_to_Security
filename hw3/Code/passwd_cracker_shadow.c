@@ -20,6 +20,8 @@ int main(){
 	FILE *shadow;
 	FILE *dict;
 	ShadowData fullShadow[52];
+	char *hash;
+	char *saltHolder;
 
 	shadow = fopen("shadow", "r");
 	if(shadow == NULL){
@@ -63,11 +65,16 @@ int main(){
 		}
 	}
 
+	//Test to check proper data storage
 	printf("ID\tsalt\thash\n");
 	for(int i = 0; i < num_accounts; i ++)
 		printf("%s\t%s\t%s\n",fullShadow[i].id, fullShadow[i].salt, fullShadow[i].hash);
-	/*char word[WORD_LEN];
+	
+
+	char word[WORD_LEN];
+	printf("Entering Password Check: \n");
 	while(fgets(word, WORD_LEN, dict)!=NULL){
+		//printf("Testing Word : %s\n",word);
 		for(int i=0; i<num_accounts; i++){
 			//////////////////////
 			// Part B: 
@@ -82,8 +89,25 @@ int main(){
 			//  you've successfully cracked it,
 			//  print the password and userid
 			//////////////////////
+			saltHolder = (char*) malloc(strlen(fullShadow[i].salt) + 3);
+			strcpy(saltHolder, "$6$");
+			strcat(saltHolder, fullShadow[i].salt);
+			hash = crypt(word, saltHolder);
+			free(saltHolder);
+
+			if (strcmp(hash,fullShadow[i].hash) == 0)
+			{
+				printf("Password Found!\n%s\t:\t%s\n",fullShadow[i].id, word);
+			}else
+			{
+				printf("\nhash from fnc:\t\t%s\n",hash);
+				printf("Expected Hash:\t\t%s\n",fullShadow[i].hash);
+				getchar();
+			}
+			
+			
 		}
-	}*/
+	}
 
 	for(int i = 0; i < num_accounts; i++)
 	{
