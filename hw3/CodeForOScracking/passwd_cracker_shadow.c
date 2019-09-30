@@ -23,7 +23,7 @@ int main(){
 	char *hash;
 	char hashHolder[256] = "";
 
-	shadow = fopen("shadow", "r");
+	shadow = fopen("/etc/shadow", "r");
 	if(shadow == NULL){
 		fprintf(stderr, "Cannot open shadow file \n");
 		exit(1);
